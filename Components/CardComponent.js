@@ -4,15 +4,16 @@ import {Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon} from 'native
 
 export default class CardComponent extends Component {
     render() {
+        const { data } = this.props;
+        const { image } = JSON.parse(data.json_metadata);
         return (
             <Card>
-
                 <CardItem>
                     <Left>
-                        <Thumbnail source={{ uri: 'https://steemitimages.com/u/anpigon/avatar' }}/>
+                        <Thumbnail source={{ uri: `https://steemitimages.com/u/${data.author}/avatar` }}/>
                         <Body>
-                            <Text>so tired</Text>
-                            <Text note>Novem 1, 2019</Text>
+                            <Text>{data.author}</Text>
+                            <Text note>{new Date(data.created).toDateString()}</Text>
                         </Body>
                     </Left>
                     <Right>
@@ -23,39 +24,39 @@ export default class CardComponent extends Component {
                 </CardItem>
 
 
-                <CardItem cardBody>
-                    <Image 
-                        source={{ uri: 'https://cdn.pixabay.com/photo/2013/07/18/20/26/boat-164989_1280.jpg'}}
-                        style={{height:200, width:null, flex:1}}
-                    />
-                </CardItem>
+                {
+                    image && image.length ?
+                    <CardItem cardBody>
+                        <Image
+                            source={{uri:image[0]}}
+                            style={{height:200, width:null, flex:1}} />
+                    </CardItem> : null
+                }
 
+                <CardItem>
+                    <Text style={{fontWeight:'900'}}>{ data.title } likes</Text>
+                </CardItem>
+                <CardItem>
+                    <Text>{ data.body.replace(/\n/g,' ').slice(0,200) } likes</Text>
+                </CardItem>
 
                 <CardItem style={{height:30}}>
                     <Left>
                         <Button transparent>
                             <Icon name="ios-heart" stlye={{color:'#000000'}}/>
+                            <Text>{ data.active_votes.length }</Text>
                         </Button>
                         <Button transparent>
                             <Icon name="ios-chatbubbles" stlye={{color:'#000000'}}/>
+                            <Text>{ data.children }</Text>
                         </Button>
                         <Button transparent>
                             <Icon name="ios-send" stlye={{color:'#000000'}}/>
                         </Button>
                     </Left>
-                </CardItem>
-
-
-                <CardItem style={{height:20}}>
-                    <Text>103 likes</Text>
-                </CardItem>
-
-
-                <CardItem>
-                    <Text>
-                        <Text style={{fontWeight:'900'}}>tired</Text>
-                        react-native start!! very nice~
-                    </Text>
+                    <Right>
+                        <Text>{ data.pending_payout_value }</Text>
+                    </Right>
                 </CardItem>
 
 
